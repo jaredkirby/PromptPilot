@@ -18,9 +18,9 @@ st.subheader("Effortlessly create effective LLM prompts")
 # Sidebar
 st.sidebar.title("About")
 st.sidebar.markdown('''
-**PromptPilot** is a powerful software tool that helps you generate the perfect GPT3 prompt every time. Using natural language processing and machine learning, PromptPilot analyzes your input sentence and generates a refined and targeted prompt based on your specific needs and goals. 
+**PromptPilot** is a powerful AI prompt refinement tool that helps you generate the perfect GPT3 prompt. Using prompt engineering methods, Pilot analyzes and attempts to clarify your intent to generate a refined and targeted prompt based on your specific needs and goals. 
 
-If you would like to help us improve this application, please leave [Feedback]("https://docs.google.com/forms/d/e/1FAIpQLSegOAZLt0oVjE1vVDWVhp-lX6AlRobf35MNvkpTeEg5vzrBmA/viewform?usp=sf_link").
+If you would like to help us improve this application, please leave [Feedback](https://docs.google.com/forms/d/e/1FAIpQLSegOAZLt0oVjE1vVDWVhp-lX6AlRobf35MNvkpTeEg5vzrBmA/viewform?usp=sf_link).
 ''')
 
 st.sidebar.markdown("---")
@@ -28,12 +28,15 @@ st.sidebar.markdown("---")
 st.sidebar.header("Example Questions")
 st.sidebar.markdown('''
 Not sure what to ask?  Here are some example questions you can try out:
-- "I need help writing an essay for my college application."
+- "I work as a manager of a restaurant and am having trouble optimizing my monthly liquor order."
 ''')
 st.sidebar.markdown("---")
 
-st.sidebar.markdown(
-    "Made by [Jared Kirby](https://www.linkedin.com/in/jared-kirby/)")
+st.sidebar.markdown('''
+    "Made by Jared Kirby
+    [LinkedIn](https://www.linkedin.com/in/jared-kirby/)
+    [GitHub](https://github.com/jaredkirby)
+    ''')
 
 
 # Initialize variables.
