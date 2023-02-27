@@ -6,10 +6,10 @@ import webbrowser
 # import random
 
 
-st.set_page_config(page_icon="🚀", page_title="GolfGod")
+st.set_page_config(page_icon="🚀", page_title="PromptPilot")
 
 st.image(
-    "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/apple/325/pilot_1f9d1-200d-2708-fe0f.png",
+    "https://i.imgur.com/WAWX9t4.jpeg",
     width=100,
 )
 
