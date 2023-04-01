@@ -2,7 +2,6 @@ import openai
 import streamlit as st
 from streamlit_chat import message
 import time
-# import random
 
 
 st.set_page_config(page_icon="🚀", page_title="PromptPilot")
@@ -25,6 +24,9 @@ If you would like to help us improve this application, please leave [Feedback](h
 
 st.sidebar.markdown("---")
 
+openai.api_key = st.sidebar.text_input("Enter your OpenAI API Key:",
+                                       value="", type="password")
+
 st.sidebar.header("Example Questions")
 st.sidebar.markdown('''
 Not sure what to ask?  Here are some example questions you can try out:
@@ -33,9 +35,9 @@ Not sure what to ask?  Here are some example questions you can try out:
 st.sidebar.markdown("---")
 
 st.sidebar.markdown('''
-    "Made by Jared Kirby
-    [LinkedIn](https://www.linkedin.com/in/jared-kirby/)
-    [GitHub](https://github.com/jaredkirby)
+    Made by Jared Kirby
+    - [LinkedIn](https://www.linkedin.com/in/jared-kirby/)
+    - [GitHub](https://github.com/jaredkirby)
     ''')
 
 
@@ -50,7 +52,7 @@ if "history" not in st.session_state:
     st.session_state["history"] = {}
 
 # Get the openAI API key
-openai.api_key = st.secrets['openai_api_key']
+# openai.api_key = st.secrets['openai_api_key']
 
 
 def get_text() -> str:
