@@ -1,99 +1,193 @@
 import openai
 import streamlit as st
-from streamlit_chat import message
-import time
 
+PAGE_TITLE = "PromptPilot"
+PAGE_ICON = "🚀"
+LAYOUT = "centered"
 
-st.set_page_config(page_icon="🚀", page_title="PromptPilot")
+st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON, layout=LAYOUT)
 
-st.image(
-    "https://i.imgur.com/WAWX9t4.jpeg",
-    width=200,
-)
+st.image("https://i.imgur.com/WAWX9t4.jpeg", width=200)
+st.title(PAGE_TITLE)
+st.subheader("Effortlessly create effective ChatGPT prompts")
 
-st.title("PromptPilot")
-st.subheader("Effortlessly create effective LLM prompts")
+with st.expander("The prompt used to improve your prompts!"):
+    st.write('''
+System message: "You are PromptPilot, a large language model trained by OpenAI and 
+prompt engineered by [Jared Kirby](https://github.com/jaredkirby). 
+Your task is to help users develop effective prompts for interacting with ChatGPT. 
+Remember to use the following techniques:
 
-# Sidebar
+-   Start with clear instructions
+-   Use few-shot learning
+-   Repeat instructions at the end
+-   Prime the output
+-   Add clear syntax
+-   Break the task down
+-   Use affordances
+-   Chain of thought prompting
+-   Specify the output structure
+-   Adjust temperature and Top_p parameters
+-   Provide grounding context
+
+Do not fabricate information and if unsure of an answer, it's okay to say 'I don't 
+know.' Remember, the goal is to produce high-quality, reliable, and accurate responses."
+
+User: "I want to improve the following prompt: 'Tell me about the benefits of 
+exercise.'"
+
+Assistant: "Of course, let's use the prompt engineering techniques to help improve
+your prompt.
+Here's an updated version:
+
+```
+You are trainerPilot, a large language model trained by OpenAI and
+prompt engineered by Jared Kirby and PromptPilot. Your
+task is to provide information on the benefits of regular physical exercise. Use
+reliable sources of information, do not fabricate any facts, and cite your sources.
+If unsure, express that you do not know. The output should be in a structured,
+bullet-point format, with each benefit clearly stated and backed by evidence.
+
+As an AI trained on a broad range of information, could you list the benefits
+of regular physical exercise, citing reliable sources for each benefit?
+```
+
+In this way, the prompt sets clear expectations for the task, specifies the output
+structure, and emphasizes the importance of providing reliable, cited information."
+             
+User: {user_input}
+
+Assistant:
+    '''
+             )
+
 st.sidebar.title("About")
 st.sidebar.markdown('''
-**PromptPilot** is a powerful AI prompt refinement tool that helps you generate the perfect GPT3 prompt. Using prompt engineering methods, Pilot analyzes and attempts to clarify your intent to generate a refined and targeted prompt based on your specific needs and goals. 
+**PromptPilot** is a prompt refinement tool powered by GPT-4 that helps you generate the
+perfect prompt for ChatGPT. Using prompt engineering methods, Pilot analyzes and 
+attempts to clarify your intent to generate a refined and targeted prompt based on your
+specific needs and goals.
 
-If you would like to help us improve this application, please leave [Feedback](https://docs.google.com/forms/d/e/1FAIpQLSegOAZLt0oVjE1vVDWVhp-lX6AlRobf35MNvkpTeEg5vzrBmA/viewform?usp=sf_link).
+Don't have GPT-4 access? 
+Shoot me an email or DM on Twitter and I'll be happy to share
+my API key with you.
 ''')
 
-st.sidebar.markdown("---")
 
-openai.api_key = st.sidebar.text_input("Enter your OpenAI API Key:",
-                                       value="", type="password")
+def get_api_key_from_user():
+    api_key = st.sidebar.text_input("Enter your OpenAI API Key:",
+                                    value="", type="password")
+    return api_key
+
+
+def initialize_openai_api(api_key):
+    openai.api_key = api_key
+
+
+api_key = get_api_key_from_user()
+initialize_openai_api(api_key)
+
+# Add a dropdown menu to select the model type
+model_type = st.sidebar.selectbox(
+    "Select Model Type", ["gpt-4", "gpt-3.5-turbo"])
+
+st.sidebar.markdown("---")
 
 st.sidebar.header("Example Questions")
 st.sidebar.markdown('''
-Not sure what to ask?  Here are some example questions you can try out:
-- "I work as a manager of a restaurant and am having trouble optimizing my monthly liquor order."
+Not sure what to ask?  Here's an example questions you can try out:
+- "I work as a manager of a restaurant and am having trouble optimizing my monthly 
+liquor order."
 ''')
-st.sidebar.markdown("---")
 
 st.sidebar.markdown('''
-    Made by Jared Kirby
-    - [LinkedIn](https://www.linkedin.com/in/jared-kirby/)
-    - [GitHub](https://github.com/jaredkirby)
-    ''')
+---
+:robot_face: Application created by [@Kirby_](https://twitter.com/Kirby_) & GPT-4
 
+:point_right: The code for this app is available on [GitHub](https://github.com/jaredkirby)
 
-# Initialize variables.
-if "generated" not in st.session_state:
-    st.session_state["generated"] = []
+---
+Built by **Jared Kirby** :wave:
 
-if "past" not in st.session_state:
-    st.session_state["past"] = []
+[Twitter](https://twitter.com/Kirby_) | [GitHub](https://github.com/jaredkirby) | [LinkedIn](https://www.linkedin.com/in/jared-kirby/) | [Portfolio](https://www.jaredkirby.me)
 
-if "history" not in st.session_state:
-    st.session_state["history"] = {}
-
-# Get the openAI API key
-# openai.api_key = st.secrets['openai_api_key']
+    '''
+                    )
 
 
 def get_text() -> str:
-    # Get user input
     user_input = st.text_input(
-        "Ask Anything: ", "Hello, who are you?", key="input")
+        "Ask Anything: ", "Hello! Will you help me improve my prompt?", key="input")
     return user_input
 
 
 user_input = get_text()
 
-prompt = '''
-You are an expert GPT-3 prompt designer named Pilot. You read the user's desired output from GPT-3 as User INPUT, written in natural language. You will analyze the user's input and ask follow-up questions if needed, in order to understand the user's intent. With that knowledge, you will create a prompt designed to maximize the user's intended use of GPT-3. Make sure to include all the relevant details to ensure the best possible outcome.\n\nExample INPUT and RESPONSE:\nExample #1\nUser: I need help writing an essay for my English class.\nPilot: If available, please provide an outline of the subject of the essay, the length of the essay, any key topics that need to be discussed, and any other relevant information that would help me generate a high-quality prompt for ChatGPT or GPT-3.\nUser: The essay is about the tech impact of Nicola Tesla. It needs to be 3 paragraphs long.\nPilot: Here is your optimized prompt: \"Write an essay about the tech impact of Nikola Tesla, approximately three paragraphs long. Include the contributions and innovations of Tesla, how his work has had an impact on technology today, and how it will continue to shape the future of technology.\"\nExample #2\nUser: I need help writing blog posts for a golf website.\nPilot: Here is your optimized prompt: \"Write one or more blog posts about golf for a website. Include topics such as golf tips and tricks, the history of golf, golf equipment and apparel, golf courses, golfers and their stories, and the latest trends in golf. Also, provide information on how to get started in golf, and address any questions that beginners may have.\" If this prompt inspired you to focus on a specific topic, let me know what it is for a new optimized prompt.\nUser: Focus on golfers and their stores.\nPilot: Here is your optimized prompt: \"Write one or more blog posts about golfers and their stories for a website. Include topics such as the background of the golfer, accomplishments, wins, and losses, their journey, and any advice they have for aspiring golfers. Also, provide information on how to get started in golf, and address any questions that beginners may have.\n
-User: {user_input}\n
-Pilot:
+if user_input and api_key:
+    system = '''
+System message: "You are PromptPilot, a large language model trained by OpenAI and 
+prompt engineered by [Jared Kirby](https://github.com/jaredkirby). 
+Your task is to help users develop effective prompts for interacting with ChatGPT. 
+Remember to use the following techniques:
+
+-   Start with clear instructions
+-   Use few-shot learning
+-   Repeat instructions at the end
+-   Prime the output
+-   Add clear syntax
+-   Break the task down
+-   Use affordances
+-   Chain of thought prompting
+-   Specify the output structure
+-   Adjust temperature and Top_p parameters
+-   Provide grounding context
+
+Do not fabricate information and if unsure of an answer, it's okay to say 'I don't 
+know.' Remember, the goal is to produce high-quality, reliable, and accurate responses."
+
+User: "I want to improve the following prompt: 'Tell me about the benefits of 
+exercise.'"
+
+Assistant: "Of course, let's use the prompt engineering techniques to help improve
+your prompt.
+Here's an updated version:
+
+```
+You are trainerPilot, a large language model trained by OpenAI and
+prompt engineered by Jared Kirby and PromptPilot. Your
+task is to provide information on the benefits of regular physical exercise. Use
+reliable sources of information, do not fabricate any facts, and cite your sources.
+If unsure, express that you do not know. The output should be in a structured,
+bullet-point format, with each benefit clearly stated and backed by evidence.
+
+As an AI trained on a broad range of information, could you list the benefits
+of regular physical exercise, citing reliable sources for each benefit?
+```
+
+In this way, the prompt sets clear expectations for the task, specifies the output
+structure, and emphasizes the importance of providing reliable, cited information."
 '''
 
-# If user input exists, query the API and update the session variables.
-if user_input:
+    message = f'''
+User: {user_input}
 
-    # Query the API
-    response = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=prompt,
-        temperature=0.5,
-        max_tokens=200,
+Assistant:
+    '''
+    response = openai.ChatCompletion.create(
+        model=model_type,  # Update the model parameter with the selected model type
+        messages=[
+            {"role": "system", "content": system},
+            {"role": "user", "content": message},
+
+        ],
+        temperature=0.7,
+        max_tokens=400,
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0,
         stop=["User: "]
     )
-    output = response.choices[0].text
-
-    st.session_state["past"].append(user_input)
-    st.session_state["generated"].append(output)
-
-if st.session_state['generated']:
-
-    # Display the chat messages.
-    for i in range(len(st.session_state['generated'])-1, -1, -1):
-        message(st.session_state["generated"][i], key=str(i))
-        time.sleep(1)
-        message(st.session_state["past"][i],
-                is_user=True, key=str(i) + "_user")
+    output = response['choices'][0]['message']['content']
+    st.markdown(f"Pilot: {output}")
+else:
+    st.markdown("Please enter your OpenAI API key to continue.")
