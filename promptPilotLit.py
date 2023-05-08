@@ -11,7 +11,47 @@ st.image("https://i.imgur.com/WAWX9t4.jpeg", width=200)
 st.title(PAGE_TITLE)
 st.subheader("Effortlessly create effective ChatGPT prompts")
 
-with st.expander("The prompt used to improve your prompts!"):
+
+st.sidebar.title("About")
+st.sidebar.markdown('''
+**PromptPilot** is a prompt refinement tool powered by GPT-4 that helps you generate the
+perfect prompt for ChatGPT. Using prompt engineering methods, Pilot analyzes and 
+attempts to clarify your intent to generate a refined and targeted prompt based on your
+specific needs and goals.
+
+Don't have GPT-4 access? 
+Shoot me an email or DM on Twitter and I'll be happy to share
+my API key with you.
+''')
+
+
+def get_api_key_from_user():
+    api_key = st.sidebar.text_input("Enter your OpenAI API Key:",
+                                    value="", type="password")
+    return api_key
+
+
+def initialize_openai_api(api_key):
+    openai.api_key = api_key
+
+
+api_key = get_api_key_from_user()
+initialize_openai_api(api_key)
+
+# Add a dropdown menu to select the model type
+model_type = st.sidebar.selectbox(
+    "Select Model Type", ["gpt-4", "gpt-3.5-turbo"])
+
+st.sidebar.markdown("---")
+
+st.sidebar.header("Example Questions")
+st.sidebar.markdown('''
+Not sure what to ask?  Here's an example questions you can try out:
+- "I work as a manager of a restaurant and am having trouble optimizing my monthly 
+liquor order."
+''')
+
+with st.sidebar.expander("The prompt used to improve your prompts!"):
     st.write('''
 System message: "You are PromptPilot, a large language model trained by OpenAI and 
 prompt engineered by [Jared Kirby](https://github.com/jaredkirby). 
@@ -60,45 +100,6 @@ User: {user_input}
 Assistant:
     '''
              )
-
-st.sidebar.title("About")
-st.sidebar.markdown('''
-**PromptPilot** is a prompt refinement tool powered by GPT-4 that helps you generate the
-perfect prompt for ChatGPT. Using prompt engineering methods, Pilot analyzes and 
-attempts to clarify your intent to generate a refined and targeted prompt based on your
-specific needs and goals.
-
-Don't have GPT-4 access? 
-Shoot me an email or DM on Twitter and I'll be happy to share
-my API key with you.
-''')
-
-
-def get_api_key_from_user():
-    api_key = st.sidebar.text_input("Enter your OpenAI API Key:",
-                                    value="", type="password")
-    return api_key
-
-
-def initialize_openai_api(api_key):
-    openai.api_key = api_key
-
-
-api_key = get_api_key_from_user()
-initialize_openai_api(api_key)
-
-# Add a dropdown menu to select the model type
-model_type = st.sidebar.selectbox(
-    "Select Model Type", ["gpt-4", "gpt-3.5-turbo"])
-
-st.sidebar.markdown("---")
-
-st.sidebar.header("Example Questions")
-st.sidebar.markdown('''
-Not sure what to ask?  Here's an example questions you can try out:
-- "I work as a manager of a restaurant and am having trouble optimizing my monthly 
-liquor order."
-''')
 
 st.sidebar.markdown('''
 ---
