@@ -22,8 +22,7 @@ SYSTEM_PROMPT = (
 )
 
 FEW_SHOT_EXAMPLE_USER = (
-    "I want to improve the following prompt: "
-    "'Tell me about the benefits of exercise.'"
+    "I want to improve the following prompt: 'Tell me about the benefits of exercise.'"
 )
 
 FEW_SHOT_EXAMPLE_ASSISTANT = """Of course, let's use the prompt engineering \
