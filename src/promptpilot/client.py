@@ -26,7 +26,7 @@ def refine_prompt(
     max_tokens: int = DEFAULT_MAX_TOKENS,
 ) -> str:
     """
-    Refine a user's prompt using OpenAI's Responses API.
+    Refine a user's prompt using OpenAI's Chat Completions API.
 
     Args:
         client: OpenAI client instance
