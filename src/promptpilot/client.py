@@ -38,16 +38,16 @@ def refine_prompt(
     Returns:
         The refined prompt suggestion from the model
     """
-    response = client.responses.create(
+    response = client.chat.completions.create(
         model=model,
-        instructions=SYSTEM_PROMPT,
-        input=[
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": FEW_SHOT_EXAMPLE_USER},
             {"role": "assistant", "content": FEW_SHOT_EXAMPLE_ASSISTANT},
             {"role": "user", "content": user_input},
         ],
         temperature=temperature,
-        max_output_tokens=max_tokens,
+        max_tokens=max_tokens,
     )
 
-    return response.output_text
+    return response.choices[0].message.content
